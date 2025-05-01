@@ -124,23 +124,23 @@ export async function authenticate(
   try {
     await signIn('credentials', formData);
   } catch (error) {
-    // if (error instanceof AuthError) {
-    //   switch (error.type) {
-    //     case 'CredentialsSignin':
-    //       return 'Invalid credentials.';
-    //     default:
-    //       return 'Something went wrong.';
-    //   }
-    // }
-    if (error && typeof error === 'object' && 'type' in error) {
-      const typedError = error as { type: string };
-      switch (typedError.type) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
         case 'CredentialsSignin':
           return 'Invalid credentials.';
         default:
           return 'Something went wrong.';
       }
     }
-    throw error;
-  }
+  //   if (error && typeof error === 'object' && 'type' in error) {
+  //     const typedError = error as { type: string };
+  //     switch (typedError.type) {
+  //       case 'CredentialsSignin':
+  //         return 'Invalid credentials.';
+  //       default:
+  //         return 'Something went wrong.';
+  //     }
+  //   }
+  //   throw error;
+  // }
 }
