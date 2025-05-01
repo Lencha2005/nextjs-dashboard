@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import postgres from "postgres";
 import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
+// import { AuthError } from 'next-auth';
 
 export type State = {
   errors?: {
@@ -124,23 +124,23 @@ export async function authenticate(
   try {
     await signIn('credentials', formData);
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
+    // if (error instanceof AuthError) {
+    //   switch (error.type) {
+    //     case 'CredentialsSignin':
+    //       return 'Invalid credentials.';
+    //     default:
+    //       return 'Something went wrong.';
+    //   }
+    // }
+    if (error && typeof error === 'object' && 'type' in error) {
+      const typedError = error as { type: string };
+      switch (typedError.type) {
         case 'CredentialsSignin':
           return 'Invalid credentials.';
         default:
           return 'Something went wrong.';
       }
     }
-  //   if (error && typeof error === 'object' && 'type' in error) {
-  //     const typedError = error as { type: string };
-  //     switch (typedError.type) {
-  //       case 'CredentialsSignin':
-  //         return 'Invalid credentials.';
-  //       default:
-  //         return 'Something went wrong.';
-  //     }
-  //   }
-  //   throw error;
-  // }
+    throw error;
+  }
 }
